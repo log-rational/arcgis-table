@@ -13,6 +13,23 @@
       height: 100%;
       width: 100%;
       }
+
+    .esri-popup__main-container{
+      width: 500px !important;
+    }
+    .esri-popup__custom-container{
+      display: grid;
+      grid-template-columns: 60% auto;
+      grid-template-rows: 1fr;
+      grid-gap: 20px;
+      align-items: center;
+    }
+
+    .esri-popup__custom-image{
+      padding-bottom: 20px;
+    }
+    
+    
   </style>
   <link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.19/"></script>
@@ -48,7 +65,8 @@
         url: "https://services.arcgis.com/QVENGdaPbd4LUkLV/ArcGIS/rest/services/USFWS_Critical_Habitat/FeatureServer/1",
         popupTemplate: {
           title: '<span style="text-transform:capitalize;">{comname}</span>',
-          content: `<table class="esri-widget__table">
+          content: `<div class="esri-popup__custom-container">
+                  <table class="esri-widget__table">
                   <tbody>
                     <tr>
                       <th class="esri-feature-fields__field-header">Scientific Name</th>
@@ -75,7 +93,9 @@
                       <td class="esri-feature-fields__field-data">{OBJECTID_1}</td>
                     </tr>
                   </tbody>
-                </table>`
+                </table>
+                <img class="esri-popup__custom-image" src="https://www.mindenpictures.com/cache/pcache2/90846771.jpg"/>
+                </div>`
           },
         renderer: rendererFWS,
         visible: true
