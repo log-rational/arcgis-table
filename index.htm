@@ -1,71 +1,92 @@
-
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>ArcGIS Developer Guide: Display a map (2D)</title>
-  <style>
-    html,
-    body,
-    #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>ArcGIS Developer Guide: Display a map (2D)</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
       }
 
-    .esri-popup__main-container{
-      width: 500px !important;
-    }
-    .esri-popup__custom-container{
-      display: grid;
-      grid-template-columns: 60% auto;
-      grid-template-rows: 1fr;
-      grid-gap: 20px;
-      align-items: center;
-    }
+      .esri-popup__main-container {
+        width: 500px !important;
+      }
+      .esri-popup__custom-container {
+        display: grid;
+        grid-template-columns: 60% auto;
+        grid-template-rows: 1fr;
+        grid-gap: 20px;
+        align-items: center;
+      }
 
-    .esri-popup__custom-image{
-      padding-bottom: 20px;
-    }
-    
-    
-  </style>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.19/"></script>
-  <script>
-    require([
-     "esri/config",
-      "esri/Map",
-      "esri/views/MapView",
-      "esri/layers/FeatureLayer",
-      "esri/symbols/SimpleMarkerSymbol",
-      "esri/symbols/SimpleFillSymbol",
-      "esri/renderers/SimpleRenderer",
-      "esri/widgets/LayerList"
-      ], function (esriConfig, Map, MapView, FeatureLayer, SimpleMarkerSymbol, SimpleFillSymbol, SimpleRenderer, LayerList) {
-      esriConfig.apiKey = "AAPKdb29e20cf1b14c128eee81472962cc5a_PmrI70hhTv5Cnx0zV8x0gyMJmT0F6AboUGtz0Wxt1Q80X5H2zVShp71G-Xcgv91";
-      const map = new Map({
-        basemap: "arcgis-light-gray" // Basemap layer
-      });
+      .esri-popup__custom-image {
+        padding-bottom: 20px;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.19/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.19/"></script>
+    <script type="text/plain" id="imgUrl">
+      var sciName =  $feauture.sciName
+      return sciName
+    </script>
 
-      const rendererFWS = new SimpleRenderer({
-        symbol: new SimpleFillSymbol({
-          color: [204, 83, 64, .5],
-          outline: {
-            color: [128, 128, 128, 0.5],
-            width: "0.2px"
-            },
-          style: 'solid'
-          })
+    <script>
+      require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/renderers/SimpleRenderer",
+        "esri/widgets/LayerList",
+      ], function (
+        esriConfig,
+        Map,
+        MapView,
+        FeatureLayer,
+        SimpleMarkerSymbol,
+        SimpleFillSymbol,
+        SimpleRenderer,
+        LayerList
+      ) {
+        esriConfig.apiKey =
+          "AAPKdb29e20cf1b14c128eee81472962cc5a_PmrI70hhTv5Cnx0zV8x0gyMJmT0F6AboUGtz0Wxt1Q80X5H2zVShp71G-Xcgv91";
+        const map = new Map({
+          basemap: "arcgis-light-gray", // Basemap layer
         });
 
-      const projectLayerFWS = new FeatureLayer({
-        id: "ftlyr_crithab_fws",
-        url: "https://services.arcgis.com/QVENGdaPbd4LUkLV/ArcGIS/rest/services/USFWS_Critical_Habitat/FeatureServer/1",
-        popupTemplate: {
-          title: '<span style="text-transform:capitalize;">{comname}</span>',
-          content: `<div class="esri-popup__custom-container">
+        const rendererFWS = new SimpleRenderer({
+          symbol: new SimpleFillSymbol({
+            color: [204, 83, 64, 0.5],
+            outline: {
+              color: [128, 128, 128, 0.5],
+              width: "0.2px",
+            },
+            style: "solid",
+          }),
+        });
+        const featureArcade = document.getElementById("imgUrl").text;
+        console.log(featureArcade);
+        console.log(rendererFWS.valueExpression);
+        const img_url = `http://www.specificdrive.com/images/species/{sciname}.png`;
+        const projectLayerFWS = new FeatureLayer({
+          id: "ftlyr_crithab_fws",
+          url: "https://services.arcgis.com/QVENGdaPbd4LUkLV/ArcGIS/rest/services/USFWS_Critical_Habitat/FeatureServer/1",
+          popupTemplate: {
+            title: '<span style="text-transform:capitalize;">{comname}</span>',
+            content: `<div class="esri-popup__custom-container">
                   <table class="esri-widget__table">
                   <tbody>
                     <tr>
@@ -92,36 +113,45 @@
                       <th class="esri-feature-fields__field-header">Object ID</th>
                       <td class="esri-feature-fields__field-data">{OBJECTID_1}</td>
                     </tr>
+                    <tr>
+                      <th class="esri-feature-fields__field-header">Image URL</th>
+                      <td class="esri-feature-fields__field-data">{expression/img_url}</td>
+                    </tr>
                   </tbody>
                 </table>
-                <img class="esri-popup__custom-image" src="https://www.mindenpictures.com/cache/pcache2/90846771.jpg"/>
-                </div>`
+                <img class="esri-popup__custom-image" src={expression/img_url}/>
+                </div>`,
+            expressionInfos: [
+              {
+                name: "img_url",
+                title: "Image URL",
+                expression: `return "http://www.specificdrive.com/images/species/"+ Lower(Replace($feature.sciname, " ", "-", 1))+".png";`,
+              },
+            ],
           },
-        renderer: rendererFWS,
-        visible: true
+          renderer: rendererFWS,
+          visible: true,
         });
 
-        
-      map.add(projectLayerFWS);
-      
-      const view = new MapView({
-        map: map,
-        center: [-111.6513, 35.1983],
-        zoom: 10,
-        container: "viewDiv",
-        constraints: {
-          snapToZoom: false
-          },
-        popup: {
-           autoOpenEnabled: true
-           }
-        });
+        map.add(projectLayerFWS);
 
-    });
-// Image URL https://www.mindenpictures.com/cache/pcache2/90846771.jpg
-  </script>
-</head>
-<body>
-  <div id="viewDiv"></div>
-</body>
+        const view = new MapView({
+          map: map,
+          center: [-111.6513, 35.1983],
+          zoom: 10,
+          container: "viewDiv",
+          constraints: {
+            snapToZoom: false,
+          },
+          popup: {
+            autoOpenEnabled: true,
+          },
+        });
+      });
+      // Image URL https://www.mindenpictures.com/cache/pcache2/90846771.jpg
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
 </html>
